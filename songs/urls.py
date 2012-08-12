@@ -4,4 +4,5 @@ urlpatterns = patterns('songs.views',
                        url(r'^$', 'latest'),
                        url(r'^(?P<chanson_id>\d+)/$', 'detail'),
                        url(r'^playlist/(?P<playlist_id>\d+)/$', 'playlist'),
+                       url(r'^update/$', 'update')
 )
