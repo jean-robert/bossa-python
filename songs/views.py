@@ -19,4 +19,5 @@ def playlist(request, playlist_id):
 
 def update(request):
     update_songs()
+    update_videos()
     return HttpResponse("Database updated")

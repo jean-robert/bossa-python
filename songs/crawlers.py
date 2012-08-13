@@ -1,5 +1,5 @@
 from BeautifulSoup import *
-import urllib2, time
+import urllib2, time, re
 from datetime import datetime, timedelta
 from songs.models import *
 
@@ -74,3 +74,44 @@ def update_songs():
         print("Ended successfully.")
     else:
         print("Error while crawling : crawl ended at " + str(datetime_start))
+
+    return True
+
+
+def crawlVideos(track):
+    mainUrl = "http://www.youtube.com/results?search_query="
+    
+    t1 = time.time()
+    title, artist = track.titre, track.artiste.nom
+
+    print("crawlVideo " + title + " de " + artist)
+
+    search_words = artist.split() + title.split()
+    search_query = '+'.join(search_words).lower()
+    
+# TO DO : Sanitize query...
+    
+    url = mainUrl + search_query
+    #print("Opening page " + url + "  ...")
+    page = urllib2.urlopen(url,timeout=15)
+    content = ''.join(page.readlines("utf8"))
+    
+    if len(re.findall('Aucune vid',content))>0:
+        print("Aucune video trouvee")        
+    else:
+        videos = re.findall('href="\/watch\?v=(.*?)[&;"]',content)
+        print("Video trouvee : http://www.youtube.com/watch?v=" + videos[0])
+            #sauvegarde en bdd
+        track.youtubekey = videos[0]
+        track.save()
+                
+    t2 = time.time()
+    print("Page processed in " + str(t2-t1) + "\n\n")
+        
+    return
+
+def update_videos():
+    for t in Chanson.objects.filter(youtubekey='NA'):
+        crawlVideos(t)
+
+    return True
