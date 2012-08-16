@@ -91,7 +91,8 @@ def crawlVideos(track):
     
 # TO DO : Sanitize query...
     
-    url = mainUrl + search_query
+    # regle les problemes d'encodage incompatible entre ascii et url
+    url = mainUrl + search_query.encode('utf-8')
     #print("Opening page " + url + "  ...")
     page = urllib2.urlopen(url,timeout=15)
     content = ''.join(page.readlines("utf8"))

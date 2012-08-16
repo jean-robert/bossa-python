@@ -8,7 +8,6 @@ par le même artiste: {{ c.artiste.count_chansons }} chanson{{ c.artiste.count_c
 <br><br>
 {% if c.has_youtubekey %}
 <iframe width="420" height="315" src="http://www.youtube.com/embed/{{ c.youtubekey }}" frameborder="0" allowfullscreen></iframe>
-<div id="videoDiv">Loading...</div>
 {% endif %}
 {% else %}
     <p>Chanson pas disponible.</p>

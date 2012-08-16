@@ -26,9 +26,9 @@ class Diffusion(models.Model):
     chanson = models.ForeignKey(Chanson)
     diff_time = models.DateTimeField('heure diffusion')
     def __unicode__(self):
-        return self.chanson.titre + ' - ' + self.diff_time.strftime('%d/%m/%Y %H:%M')
+        return self.chanson.artiste.nom + ' - ' + self.chanson.titre + ' - ' + self.diff_time.strftime('%d/%m/%Y %H:%M')
     def viewdisplay(self):
-        return self.chanson.titre + ' - ' + self.diff_time.strftime('%d/%m/%Y %H:%M')
+        return self.chanson.artiste.nom + ' - ' + self.chanson.titre + ' - ' + self.diff_time.strftime('%d/%m/%Y %H:%M')
 
 class Playlist(models.Model):
     nom = models.CharField(max_length=200)
