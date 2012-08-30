@@ -23,9 +23,10 @@ def detail(request, chanson_id):
 
 def playlist(request, playlist_id):
     p = get_object_or_404(Playlist, pk=playlist_id)
-    return render_to_response('songs/playlist.html', {'p': p})
+    return render_to_response('songs/playlist.html', {'p': p.chansons.all()})
 
 def update(request):
     update_songs()
     update_videos()
+    update_playlist()
     return HttpResponse("Database updated")

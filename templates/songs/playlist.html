@@ -1,0 +1,116 @@
+<html>
+<head>
+<style type="text/css">
+  #videoDiv { 
+  margin-right: 3px;
+  }
+  #videoInfo {
+  margin-left: 3px;
+  }
+</style>
+<script src="http://www.google.com/jsapi" type="text/javascript"></script>
+<script type="text/javascript">
+  google.load("swfobject", "2.1");
+</script>   
+<script type="text/javascript">
+  /*
+  * Adding several videos plus displaying playlist info
+  */
+
+  // Update a particular HTML element with a new value
+  function updateHTML(elmId, value) {
+  document.getElementById(elmId).innerHTML = value;
+  }
+
+  // This function is called when an error is thrown by the player
+  function onPlayerError(errorCode) {
+  alert("An error occured of type:" + errorCode);
+  }
+
+  // This function is called when the player changes state
+  function onPlayerStateChange(newState) {
+  updateHTML("playerState", newState);
+  }
+
+  // Display information about the current state of the player
+  function updatePlayerInfo() {
+  // Also check that at least one function exists since when IE unloads the
+  // page, it will destroy the SWF before clearing the interval.
+  if(ytplayer && ytplayer.getDuration) {
+  updateHTML("videoDuration", ytplayer.getDuration());
+  updateHTML("videoCurrentTime", ytplayer.getCurrentTime());
+  updateHTML("bytesTotal", ytplayer.getVideoBytesTotal());
+  updateHTML("startBytes", ytplayer.getVideoStartBytes());
+  updateHTML("bytesLoaded", ytplayer.getVideoBytesLoaded());
+  if(ytplayer.getPlaylist() != null) {
+  updateHTML("videoIDs", ytplayer.getPlaylist().join(" <br>"));
+  }
+  }
+  }
+
+  // This function is automatically called by the player once it loads
+  function onYouTubePlayerReady(playerId) {
+  ytplayer = document.getElementById("ytPlayer");
+  // This causes the updatePlayerInfo function to be called every 250ms to
+  // get fresh data from the player
+  setInterval(updatePlayerInfo, 250);
+  updatePlayerInfo();
+  loadPlaylist();
+  ytplayer.addEventListener("onStateChange", "onPlayerStateChange");
+  ytplayer.addEventListener("onError", "onPlayerError");
+  }
+  
+  // The "main method" of this sample. Called when someone clicks "Run".
+  function loadPlayer() {
+  // The video to load
+  var videoID = "fzzjgBAaWZw"
+  // Lets Flash from another domain call JavaScript
+  var params = { allowScriptAccess: "always" };
+  // The element id of the Flash embed
+  var atts = { id: "ytPlayer" };
+  // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
+  swfobject.embedSWF("http://www.youtube.com/v/" + videoID + 
+  "?version=3&enablejsapi=1&playerapiid=player1", 
+  "videoDiv", "480", "295", "9", null, null, params, atts);
+  }
+
+  function loadPlaylist() {
+  ytplayer.loadPlaylist([{% for chanson in p %}{% if chanson.has_youtubekey %}'{{ chanson.youtubekey }}',{% endif %}{% endfor %}])
+  }
+
+  function _run() {
+  loadPlayer();
+  }
+
+  google.setOnLoadCallback(_run);
+</script>
+</head>
+
+<!--
+<div id="videoDiv">Loading...</div></td>
+<div id="videoControls">
+<p>Dernières diffusions: </p>
+<ul>
+  {% for diff in diff_list %}
+  <li><a href="/songs/{{ diff.chanson.id }}/">{{ diff.viewdisplay }}</a>{% if diff.chanson.has_youtubekey %} - <a href="javascript:void(0);" onclick="loadVideo('{{ diff.chanson.youtubekey }}')">Jouer</a>{% endif %}</li>
+  {% endfor %}
+</ul>
+</div>
+-->
+<body>
+<table>
+  <tr>
+    <td><div id="videoDiv">Loading...</div></td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <div id="videoInfo">
+        <p>Player state: <span id="playerState">--</span></p>
+        <p>Current Time: <span id="videoCurrentTime">--:--</span> | Duration: <span id="videoDuration">--:--</span></p>
+        <p>Bytes Total: <span id="bytesTotal">--</span> | Start Bytes: <span id="startBytes">--</span> | Bytes Loaded: <span id="bytesLoaded">--</span></p>
+	<p>Playlist: <br><span id="videoIDs">--</span></p>
+      </div>
+  </td></tr>
+</table>
+</body>
+</html>

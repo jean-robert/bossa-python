@@ -116,3 +116,23 @@ def update_videos():
         crawlVideos(t)
 
     return True
+
+
+def update_playlist():
+    # Mise a jour des 2 playlists principales
+    # Dernieres 100 diffusions
+    latest_diff_list = Diffusion.objects.all().order_by('-diff_time')[:100]
+    p = Playlist.objects.get(pk=1)
+    p.chansons.clear()
+    for d in latest_diff_list:
+        p.chansons.add(d.chanson)
+
+    # Dernieres 100 nouveautes
+    newest_songs_list = Chanson.objects.all().order_by('-id')[:100]
+    p = Playlist.objects.get(pk=2)
+    p.chansons.clear()
+    for c in newest_songs_list:
+        p.chansons.add(c)
+
+    return True
+
