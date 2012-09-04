@@ -126,6 +126,7 @@ def update_playlist():
     p.chansons.clear()
     for d in latest_diff_list:
         p.chansons.add(d.chanson)
+    p.save()
 
     # Dernieres 100 nouveautes
     newest_songs_list = Chanson.objects.all().order_by('-id')[:100]
@@ -133,6 +134,7 @@ def update_playlist():
     p.chansons.clear()
     for c in newest_songs_list:
         p.chansons.add(c)
+    p.save()
 
     return True
 

@@ -1,0 +1,15 @@
+court terme
+ créer des playlists ordonnées 
+ implementer design bootstrap sans trop compliquer
+ restructurer les '3 parties' du site
+  => un moteur de générateur de playlist de base
+  => des plugins qui s'inputent sur le générateur
+  => interface utilisateur de l'output (=playlist) sur le sits
+ renommer le site en 'meta radio'
+ implémenter un crawler pour FIP
+ modifier la base pour inclure un 'model' 'radio'
+ implémenter un thread pour inclure le chron dans le server django
+
+long terme
+ enregistrer les chansons avec buffer pour uploader sur youtube
+  => publication des chansons en exclu synchroniser donc gain de popularité par ce biais
