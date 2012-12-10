@@ -1,5 +1,5 @@
 court terme
- créer des playlists ordonnées 
+ créer des playlists ordonnées => pas sur que ce soit nécessaire pour les playlists à la volée
  implementer design bootstrap sans trop compliquer
  restructurer les '3 parties' du site
   => un moteur de générateur de playlist de base
@@ -13,3 +13,19 @@ court terme
 long terme
  enregistrer les chansons avec buffer pour uploader sur youtube
   => publication des chansons en exclu synchroniser donc gain de popularité par ce biais
+ sauvegarde utilisateur de playlists statiques ou dynamiques
+ ajout de "j'aime/j'aime pas" comme sur novaplanet, mais en mieux
+ creation de playlist j'aime/j'aime pas user-specific ou userbase-wide
+
+structure du site (inspirée de http://jarv.org/2011/10/django-jquery-tutorial-part1/)
+le document root URL retourne le template de l'index principal, qui va rendre du dynamic html, css et javascript.
+les URLs définis sont appelés par le javascript rendu sur la page principale.
+get_playlist - retourne json data d'une playlist pour ajouter au site
+get_song - retourne html pour une chanson => nécessite un parametre
+4 elements + 1 top bar: 1/ playlist generator, 2/ playlist, 3/ video, 4/ song info
+
+index view pas besoin d'etre définie car le template est fait dans les urls
+get_playlist view génère le JSON associée à une playlist
+get_song view génère l'html liée à une chanson
+
+http://richardboardman.com/wp-content/uploads/2012/04/viz3.png
