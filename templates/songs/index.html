@@ -1,9 +1,25 @@
-{% if latest_diff_list %}
-    <ul>
-    {% for diff in latest_diff_list %}
-        <li><a href="/songs/{{ diff.chanson.id }}/">{{ diff.viewdisplay }}</a><br><iframe width="200" height="200" src="http://www.youtube.com/embed/{{ diff.chanson.youtubekey }}" frameborder="0" allowfullscreen></iframe></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No songs are available.</p>
-{% endif %}
+{% extends 'songs/base.html' %}
+
+{% block container %}
+<div class="generator">
+  <div class="generator-header">
+    <h1>Generator</h1>
+  </div>
+  <div class="generator-content"></div>
+</div>
+<div class="playlist">
+  <div class="playlist-header">
+    <h1>Playlist</h1>
+  </div>
+  <div class="playlist-content"></div>
+</div>
+<div class="player"></div>
+<div class="song"> 
+  <div class="song-header">
+    <h1>Song</h1>
+  </div>
+  <div class="song-content">
+    This is the song
+  </div>
+</div>
+{% endblock %}

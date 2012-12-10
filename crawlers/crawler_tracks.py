@@ -1,9 +1,9 @@
 from BeautifulSoup import *
-import urllib2, _mysql, time
+import urllib2, time
 from datetime import datetime,timedelta
 
-def sqlwrap(text):
-  return "'"+text.replace('\\','\'').replace('\'','\\\'').replace('"','\\"')+"'"
+#def sqlwrap(text):
+#  return "'"+text.replace('\\','\'').replace('\'','\\\'').replace('"','\\"')+"'"
 
 def get_track_time(time, year, month, day,hour):
     [h,m] = time.split('H')
@@ -22,7 +22,7 @@ def crawlNova(datetime_start, now):
     mainUrl = "http://www.novaplanet.com/cetaitquoicetitre/radionova/"
     step = 3600
 
-    db = _mysql.connect(host="localhost",user="root",passwd="root",db="nova_tracks",unix_socket="/Applications/MAMP/tmp/mysql/mysql.sock")
+    # db = _mysql.connect(host="localhost",user="root",passwd="root",db="nova_tracks",unix_socket="/Applications/MAMP/tmp/mysql/mysql.sock")
     curr_datetime = datetime_start
     
 
@@ -43,25 +43,28 @@ def crawlNova(datetime_start, now):
         if tracks == None:
           return curr_datetime
 
+        print("On that page:")
+        for t in tracks:
+          print("Divid: " + t["divid"] + ", Time: " + get_track_time(t["datetime"],year,month,day,hour) + ", Artist: " + t["artist"] + " , Title: " + t["title"])
         #insertion en base de donnees
 
-        query = "INSERT IGNORE INTO tracks (title, artist, first_time_played) VALUES "
-        query += ",".join(["(%s,%s,%s)" % (sqlwrap(t["title"]),sqlwrap(t["artist"]),sqlwrap(get_track_time(t["datetime"],year,month,day,hour))) for t in tracks])
-        db.query(query.encode("utf8"))
+        #query = "INSERT IGNORE INTO tracks (title, artist, first_time_played) VALUES "
+        #query += ",".join(["(%s,%s,%s)" % (sqlwrap(t["title"]),sqlwrap(t["artist"]),sqlwrap(get_track_time(t["datetime"],year,month,day,hour))) for t in tracks])
+        #db.query(query.encode("utf8"))
 
-        result=db.store_result()
-        for t in tracks:
-            date = get_track_time(t["datetime"],year,month,day,hour)
-            query="UPDATE tracks SET last_time_played=%s, nb_times_played=nb_times_played+1 WHERE title=%s AND artist=%s AND last_time_played<>%s " % (sqlwrap(date),sqlwrap(t["title"]),sqlwrap(t["artist"]),sqlwrap(date))
-            db.query(query.encode("utf8"))
+        #result=db.store_result()
+        #for t in tracks:
+        #    date = get_track_time(t["datetime"],year,month,day,hour)
+        #    query="UPDATE tracks SET last_time_played=%s, nb_times_played=nb_times_played+1 WHERE title=%s AND artist=%s AND last_time_played<>%s " % (sqlwrap(date),sqlwrap(t["title"]),sqlwrap(t["artist"]),sqlwrap(date))
+        #    db.query(query.encode("utf8"))
 
         t2=time.time()
         print("Page processed in %s seconds.\n" % str(t2-t1))
         curr_datetime += step
         
-    db.close()
+    #db.close()
     
-    return curr_date
+    return curr_datetime
 
 
 def tracks_scraper(url):
@@ -75,7 +78,7 @@ def tracks_scraper(url):
     content = ''.join(page.readlines("utf8"))
 
     parsed_content = BeautifulSoup(content, convertEntities=BeautifulStoneSoup.HTML_ENTITIES)
-    tracks = [{"title":t.find("span",{"id":"titre"}).find(text=True).replace("\n",""), "artist":t.find("span",{"id":"artiste"}).find(text=True).replace("\n",""),"datetime":t.find("span",{"id":"date"}).find(text=True)} for t in parsed_content.findAll("div",{"class":"resultat"})]
+    tracks = [{"divid":t['id'], "title":t.find("span",{"id":"titre"}).find(text=True).replace("\n",""), "artist":t.find("span",{"id":"artiste"}).find(text=True).replace("\n",""),"datetime":t.find("span",{"id":"date"}).find(text=True)} for t in parsed_content.findAll("div",{"class":"resultat"})]
 
     return tracks
 
@@ -83,15 +86,16 @@ def tracks_scraper(url):
 
 
 if __name__ == "__main__":
-    datetime_start = 1107097200 # 30 janvier 2005, 16h00
+    # datetime_start = 1107097200 # 30 janvier 2005, 16h00
+    datetime_start = 1344408595
     now = time.time()
     
     while datetime_start < now:
       datetime_start = crawlNova(datetime_start, now)
 
-    if date>=now:
+    if datetime_start>=now:
         print("Ended successfully.")
     else:
-        print("Error while crawling : crawl ended at " + str(date))
+        print("Error while crawling : crawl ended at " + str(datetime_start))
     
     

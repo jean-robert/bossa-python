@@ -1,4 +1,9 @@
+<!DOCTYPE html>
+<html>
 <head>
+    <title>MetaRadio</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 <style type="text/css">
   #videoDiv { 
   margin-right: 3px;
@@ -58,7 +63,9 @@
   google.setOnLoadCallback(_run);
 </script>
 </head>
-
+<body>
+ <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 <div id="videoDiv">Loading...</div></td>
 <div id="videoControls">
 <p>Dernières diffusions: </p>
@@ -68,3 +75,5 @@
   {% endfor %}
 </ul>
 </div>
+</body>
+</html>

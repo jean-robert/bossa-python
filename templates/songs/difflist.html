@@ -1,70 +1,113 @@
-<head>
-<style type="text/css">
-  #videoDiv { 
-  margin-right: 3px;
-  }
-  #videoInfo {
-  margin-left: 3px;
-  }
-</style>
-<script src="http://www.google.com/jsapi" type="text/javascript"></script>
-<script type="text/javascript">
-  google.load("swfobject", "2.1");
-</script>   
-<script type="text/javascript">
-  
-  // Update a particular HTML element with a new value
-  function updateHTML(elmId, value) {
-  document.getElementById(elmId).innerHTML = value;
-  }
-  
-  // Loads the selected video into the player.
-  function loadVideo(videoID) {
-  if(ytplayer) {
-  ytplayer.loadVideoById(videoID);
-  }
-  }
-  
-  // This function is called when an error is thrown by the player
-  function onPlayerError(errorCode) {
-  alert("An error occured of type:" + errorCode);
-  }
-  
-  // This function is automatically called by the player once it loads
-  function onYouTubePlayerReady(playerId) {
-  ytplayer = document.getElementById("ytPlayer");
-  ytplayer.addEventListener("onError", "onPlayerError");
-  }
-  
-  // The "main method" of this sample. Called when someone clicks "Run".
-  function loadPlayer() {
-  // The video to load
-  var videoID = "ylLzyHk54Z0"
-  // Lets Flash from another domain call JavaScript
-  var params = { allowScriptAccess: "always" };
-  // The element id of the Flash embed
-  var atts = { id: "ytPlayer" };
-  // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
-  swfobject.embedSWF("http://www.youtube.com/v/" + videoID + 
-  "?version=3&enablejsapi=1&playerapiid=player1", 
-  "videoDiv", "480", "295", "9", null, null, params, atts);
-  }
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MetaRadio</title>
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <script src="http://www.google.com/jsapi" type="text/javascript"></script>
+    <script type="text/javascript">
+      google.load("swfobject", "2.1");
+    </script>   
+    <style type="text/css">
+      body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+      }
+    </style>
+    <script type="text/javascript">
+      
+      // Update a particular HTML element with a new value
+      function updateHTML(elmId, value) {
+      document.getElementById(elmId).innerHTML = value;
+      }
+      
+      // Loads the selected video into the player.
+      function loadVideo(videoID) {
+      if(ytplayer) {
+      ytplayer.loadVideoById(videoID);
+      }
+      }
+      
+      // This function is called when an error is thrown by the player
+      function onPlayerError(errorCode) {
+      alert("An error occured of type:" + errorCode);
+      }
+      
+      // This function is automatically called by the player once it loads
+      function onYouTubePlayerReady(playerId) {
+      ytplayer = document.getElementById("ytPlayer");
+      ytplayer.addEventListener("onError", "onPlayerError");
+      }
+      
+      // The "main method" of this sample. Called when someone clicks "Run".
+      function loadPlayer() {
+      // The video to load
+      var videoID = "ylLzyHk54Z0"
+      // Lets Flash from another domain call JavaScript
+      var params = { allowScriptAccess: "always" };
+      // The element id of the Flash embed
+      var atts = { id: "ytPlayer" };
+      // All of the magic handled by SWFObject (http://code.google.com/p/swfobject/)
+      swfobject.embedSWF("http://www.youtube.com/v/" + videoID + 
+      "?version=3&enablejsapi=1&playerapiid=player1", 
+      "videoDiv", "480", "295", "9", null, null, params, atts);
+      }
+      
+      function _run() {
+      loadPlayer();
+      loadVideo();
+      }
+      
+      google.setOnLoadCallback(_run);
+    </script>
+  </head>
 
-  function _run() {
-  loadPlayer();
-  loadVideo();
-  }
+  <body>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
 
-  google.setOnLoadCallback(_run);
-</script>
-</head>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">MetaRadio</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="/songs/playlist/1">Les dernières</a></li>
+              <li><a href="/songs/playlist/2">Les nouvelles</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Plus diffusées<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Chanson</a></li>
+                  <li><a href="#">Artiste</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div id="videoDiv">Loading...</div></td>
-<div id="videoControls">
-<p>Dernières diffusions: </p>
-<ul>
-  {% for diff in diff_list %}
-  <li><a href="/songs/{{ diff.chanson.id }}/">{{ diff.viewdisplay }}</a>{% if diff.chanson.has_youtubekey %} - <a href="javascript:void(0);" onclick="loadVideo('{{ diff.chanson.youtubekey }}')">Jouer</a>{% endif %}</li>
-  {% endfor %}
-</ul>
-</div>
+    <div class="row">
+      <div class="span7">
+	<ul class="nav nav-list">
+	  <li class="nav-header">Dernières diffusions:</li>
+	  {% for diff in diff_list %}
+	  <li><a href="javascript:void(0);" onclick="loadVideo('{{ diff.chanson.youtubekey }}')"><i class="icon-search icon-play"></i> {{ diff.viewdisplay }}</a></li>
+	  {% endfor %}
+	</ul>
+      </div>
+      <div class="span5">
+	<div class="container" id="videoDiv" align="center" >Loading...</div>	
+      </div>
+    </div>
+    
+</body>
+</html>
